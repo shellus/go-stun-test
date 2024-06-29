@@ -71,7 +71,11 @@ func printLocalAddr(port int) {
 			if ip.IsLoopback() || !ip.IsGlobalUnicast() {
 				continue
 			}
-			fmt.Printf("%s: %s:%d\n", i.Name, ip.String(), port)
+			if ip.To4() != nil {
+				fmt.Printf("%s: addr %s:%d\n", i.Name, ip.String(), port)
+			} else {
+				fmt.Printf("%s: addr [%s]:%d\n", i.Name, ip.String(), port)
+			}
 		}
 	}
 }
