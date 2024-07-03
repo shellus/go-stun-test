@@ -18,6 +18,7 @@ func main() {
 	var test = flag.Bool("t", false, "Run the test suite")
 	var serverAddr = flag.String("s", "stun.syncthing.net:3478", "STUN server address")
 	var verboseLevel = flag.Int("v", 0, "Verbose level (0: none, 1: verbose, 2: double verbose, 3: triple verbose)")
+	var port = flag.Int("p", 0, "Port to listen on, 0 means random")
 	flag.Parse()
 
 	// Validate verbose level
@@ -25,9 +26,12 @@ func main() {
 		_, _ = fmt.Fprintln(os.Stderr, "Error: Invalid verbose level. Use -v with values 0, 1, 2, or 3.")
 		os.Exit(1)
 	}
-
+	laddr := &net.UDPAddr{
+		IP:   net.ParseIP("::"),
+		Port: *port,
+	}
 	// Create Socket
-	conn, err := net.ListenUDP("udp", nil)
+	conn, err := net.ListenUDP("udp", laddr)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
